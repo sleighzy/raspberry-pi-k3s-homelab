@@ -351,6 +351,44 @@ $ buildctl build \
  --output type=image,name=docker.io/sleighzy/keycloak:11.0.2-arm64,push=true
 ```
 
+## Updating Configuration in Secrets
+
+Kubernetes configuration can be stored as secrets instead of config maps.
+Configuration files are stored in base64 encoded format and there is no easy
+helper for editing them. A quick tip for making updates:
+
+The base64 content can be retrieved using the below command.
+
+```sh
+$ kubectl get secrets/loki -n loki-stack -o jsonpath='{.data}'
+
+{"loki.yaml":"YXV0aF9lb...zCg=="}
+```
+
+The base64 value needs to be decoded and piped to a file.
+
+```sh
+echo 'YXV0aF9lb...zCg==' | base64 --decode > loki.yaml
+```
+
+After updating the `loki.yaml` file it can then be applied and the secret
+updated. This trick is done using the output of a dry-run from the `kubectl`
+command which outputs this in yaml format. This is then piped into the actual
+`kubectl apply` command.
+
+```sh
+$ kubectl create secret -n loki-stack generic loki.yaml \
+    --from-file=loki.yaml \
+    --dry-run=client -o yaml \
+    | kubectl apply -f -
+
+secret/loki.yaml created
+```
+
+Credits go to David Dooling on
+<https://blog.atomist.com/updating-a-kubernetes-secret-or-configmap/> for this
+tip.
+
 ## Troubleshooting
 
 If the k3s services do not start up properly then check the logs for further
