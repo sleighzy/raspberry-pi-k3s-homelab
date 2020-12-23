@@ -1,8 +1,11 @@
 # Raspberry Pi K3s Homelab
 
-This repository contains my random notes on building and deploying a K3s cluster
-using Raspberry Pis. I have a short memory so this makes it easier to remember
-why/how I did things...and may help others who travel down this path.
+This repository contains my random notes on building and deploying a [K3s]
+Kubernetes cluster using Raspberry Pis. I have a short memory so this makes it
+easier to remember why/how I did things...and may help others who travel down
+this path.
+
+![k3s-cluster](./raspberry-pi-4b-cluster.jpg)
 
 ## Raspberry Pi
 
@@ -31,6 +34,7 @@ easy to follow to install the Ubuntu OS on your SD card. I chose the recommended
 Ubuntu Server 20.04.1 LTS 64bit option as I was more interested in running this
 headless, for now, than installing a full desktop.
 
+[k3s]: https://k3s.io/
 [raspberry pi]: https://www.raspberrypi.org/
 [raspberry pi 4 model b]:
   https://www.raspberrypi.org/products/raspberry-pi-4-model-b/specifications/
