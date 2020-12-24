@@ -109,7 +109,9 @@ deployed [MinIO] into my K3s cluster as a self hosted object storage solution,
 see [K3s MinIO Deployment] for instructions on this.
 
 Update the configuration in the file to specify `s3` as the data store, provide
-the URL to the MinIO server, and authentication credentials.
+the URL to the MinIO server, and authentication credentials. The `loki` bucket
+specified in the example url below needs to be created prior to applying and
+redeploying this.
 
 The configuration for the S3 connection for MinIO is slightly different than
 using AWS S3. This must match the following to prevent connection errors and the
