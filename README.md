@@ -17,7 +17,7 @@ My cluster is built with [Raspberry Pi 4 Model B]:
 
 - Quad core ARM v8 (64bit) 1.5GHz CPU
 - 8Gb RAM
-- 2.45GHz and 5GHz wifi
+- 2.45GHz and 5GHz Wi-Fi
 - Bluetooth
 - Gigabit ethernet
 - 2 USB 2 and 2 USB 3 ports
@@ -33,6 +33,26 @@ The [Install Ubuntu on a Raspberry Pi] documentation and installer is extremely
 easy to follow to install the Ubuntu OS on your SD card. I chose the recommended
 Ubuntu Server 20.04.1 LTS 64bit option as I was more interested in running this
 headless, for now, than installing a full desktop.
+
+## Deploying K3s
+
+See the [K3s README file] for instructions on installing K3s on the Raspberry
+Pis:
+
+- How to deploy nodes using the standard K3s scripts
+- How to deploy nodes using the awesome [k3sup] (pronounced "ketchup") tool
+- Using external hard drives for storage with the K3s local-storage class
+- Building images with BuildKit for containerd
+
+## Cluster Monitoring and Grafana Loki
+
+See the [Cluster Monitoring README file] for instructions on deploying a
+monitoring solution for your Raspberry Pi K3s cluster:
+
+- OS information for the Raspberry Pis, e.g. disk space, temperature, etc.
+- Metrics on running pods and resource usage
+- Grafana dashboards for viewing metrics
+- Deployment of Grafana Loki for aggregating and viewing logs
 
 ## Deployed Applications
 
@@ -51,9 +71,12 @@ for installing the applications deployed in my cluster.
 
 <!-- markdownlint-enable MD013 -->
 
+[cluster monitoring readme file]: monitoring-and-logging/README.md
 [install ubuntu on a raspberry pi]: https://ubuntu.com/download/raspberry-pi
 [k3s]: https://k3s.io/
 [k3s keycloak deployment]: https://github.com/sleighzy/k3s-keycloak-deployment
+[k3s readme file]: ./k3s.md
+[k3sup]: https://github.com/alexellis/k3sup
 [keycloak]: https://www.keycloak.org/
 [minio]: https://min.io/
 [minio s3]: https://github.com/sleighzy/k3s-minio-deployment
