@@ -34,8 +34,35 @@ easy to follow to install the Ubuntu OS on your SD card. I chose the recommended
 Ubuntu Server 20.04.1 LTS 64bit option as I was more interested in running this
 headless, for now, than installing a full desktop.
 
+## Deployed Applications
+
+The table below contains references to my Github repositories and instructions
+for installing the applications deployed in my cluster.
+
+<!-- markdownlint-disable MD013 -->
+
+| Application                                     | Description                                                                                                                                                                                                                                                      |
+| ----------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Traefik 2 Kubernetes Ingress Controller CRD]   | Manifest files, instructions, and examples for deploying the Traefik 2 Kubernetes Ingress Controller. This uses the new Kubernetes Custom Resource Definition (CRD) for Ingress Routes in Traefik 2. K3s installs Traefik 1.7 so this is a replacement for that. |
+| [K3s Keycloak Deployment]                       | Deployment of [Keycloak] for authentication and authorization to applications and services.                                                                                                                                                                      |
+| [OpenID Connect Traefik Forward Authentication] | Manifest files and instructions for deploying a Traefik Forward Authentication component to delegate authentication to OpenID Connect Providers such as Github or Google.                                                                                        |
+| [MinIO S3]                                      | Files for deploying the Open Source [MinIO] server for S3 object storage. Contains additional documentation and policy files for integrating with Keycloak using OAuth2 / OpenID Connect to authenticate and authorize access to resources.                      |
+| [Restic MinIO Backups]                          | Using [Restic] to backup data to [MinIO] S3 storage                                                                                                                                                                                                              |
+
+<!-- markdownlint-enable MD013 -->
+
+[install ubuntu on a raspberry pi]: https://ubuntu.com/download/raspberry-pi
 [k3s]: https://k3s.io/
+[k3s keycloak deployment]: https://github.com/sleighzy/k3s-keycloak-deployment
+[keycloak]: https://www.keycloak.org/
+[minio]: https://min.io/
+[minio s3]: https://github.com/sleighzy/k3s-minio-deployment
+[openid connect traefik forward authentication]:
+  https://github.com/sleighzy/k3s-traefik-forward-auth-openid-connect
 [raspberry pi]: https://www.raspberrypi.org/
 [raspberry pi 4 model b]:
   https://www.raspberrypi.org/products/raspberry-pi-4-model-b/specifications/
-[install ubuntu on a raspberry pi]: https://ubuntu.com/download/raspberry-pi
+[restic]: https://restic.net/
+[restic minio backups]: restic-minio-backups.md
+[traefik 2 kubernetes ingress controller crd]:
+  https://github.com/sleighzy/k3s-traefik-v2-kubernetes-crd
