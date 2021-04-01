@@ -243,13 +243,45 @@ spec:
           mountPath: /data
 ```
 
-Run the below command to edit the K3s config for the local storage provisioner.
+The K3s `/var/lib/rancher/k3s/server/manifests/local-storage.yaml` manifest file
+needs to be updated to specify that persistent volume claims on the `k3s-1` node
+should be created in the `/mnt/data/storage` directory. The K3s storage
+provisioner should dynamically pick up these changes.
+
+```yaml
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: local-path-config
+  namespace: kube-system
+data:
+  config.json: |-
+    {
+            "nodePathMap":[
+            {
+                    "node":"k3s-1",
+                    "paths":["/mnt/data/storage"]
+            },
+            {
+                    "node":"DEFAULT_PATH_FOR_NON_LISTED_NODES",
+                    "paths":["/var/lib/rancher/k3s/storage"]
+            }
+            ]
+    }
+```
+
+The below command can be run to edit the K3s config for the local storage
+provisioner directly if the changes to the manifest file do not get picked up
+automatically. The array of entries for the `nodePathMap` below should already
+include the `/mnt/data/storage` entry if the manifest file was picked up
+automatically.
 
 ```sh
 kubectl edit configmap/local-path-config -n kube-system
 ```
 
-Update the config to specify that peristent volume claims on the `k3s-1` node
+Update the config to specify that persistent volume claims on the `k3s-1` node
 should be created in the `/mnt/data/storage` directory. The K3s storage
 provisioner will dynamically pick up these changes.
 
