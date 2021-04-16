@@ -84,7 +84,7 @@ Update the file and run the below command to update the configuration in the
 secret.
 
 ```sh
-$ kubectl create secret -n loki-stack generic loki.yaml \
+$ kubectl create secret -n loki-stack generic loki \
     --from-file=loki.yaml \
     --dry-run=client \
     -o yaml \
