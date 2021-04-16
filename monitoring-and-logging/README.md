@@ -90,7 +90,7 @@ $ kubectl create secret -n loki-stack generic loki \
     -o yaml \
     | kubectl apply -f -
 
-secret/loki.yaml created
+secret/loki created
 ```
 
 Configuration files are stored in base64 encoded format and there is no easy
