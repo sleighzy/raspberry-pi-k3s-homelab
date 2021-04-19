@@ -234,7 +234,7 @@ spec:
   containers:
     - name: minio
       image: minio/minio:RELEASE.2020-10-28T08-16-50Z-arm64
-      args: ['server', '/data']
+      args: ["server", "/data"]
       ports:
         - name: minio
           containerPort: 9000
@@ -316,12 +316,21 @@ memory and not even written to disk. This can help prolong the SD card life as
 this reduces writes to the actual disk.
 
 ```yaml
-- name: etc-pihole
-  mountPath: /etc/pihole
-  volumes:
-- name: etc-pihole
-  emptyDir:
-  medium: Memory
+---
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: pihole
+          image: pihole/pihole:latest
+          volumeMounts:
+            - name: etc-pihole
+              mountPath: /etc/pihole
+      volumes:
+        - name: etc-pihole
+          emptyDir:
+          medium: Memory
 ```
 
 ## Building Container Images
@@ -409,12 +418,13 @@ command which outputs this in yaml format. This is then piped into the actual
 `kubectl apply` command.
 
 ```sh
-$ kubectl create secret -n loki-stack generic loki.yaml \
+$ kubectl create secret -n loki-stack generic loki \
     --from-file=loki.yaml \
-    --dry-run=client -o yaml \
+    --dry-run=client \
+    -o yaml \
     | kubectl apply -f -
 
-secret/loki.yaml created
+secret/loki created
 ```
 
 Credits go to David Dooling on
@@ -430,7 +440,6 @@ the message `(/boot/cmdline.txt on a Raspberry Pi)` is not accurate for Ubuntu
 20, the parameters (see above for the complete list) need to be added to the
 `/boot/firmware/cmdline.txt` file.
 
-````sh
 ```sh
 $ sudo journalctl -u k3s -f
 -- Logs begin at Wed 2020-04-01 17:23:43 UTC. --
@@ -444,7 +453,7 @@ Oct 13 07:39:49 k3s-1 systemd[1]: Started Lightweight Kubernetes.
 Oct 13 07:39:49 k3s-1 systemd[1]: k3s.service: Main process exited, code=exited, status=1/FAILURE
 Oct 13 07:39:49 k3s-1 systemd[1]: k3s.service: Failed with result 'exit-code'.
 Oct 13 07:39:53 k3s-1 systemd[1]: Stopped Lightweight Kubernetes.
-````
+```
 
 [buildkit]: https://github.com/moby/buildkit
 [containerd]: https://containerd.io/
