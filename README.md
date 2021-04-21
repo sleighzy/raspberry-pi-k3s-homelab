@@ -64,8 +64,26 @@ the wifi network settings to the `/etc/netplan/50-cloud-init.yaml` file.
 # update the 50-cloud-init.yaml file with the wifi network settings
 $ sudoedit /etc/netplan/50-cloud-init.yaml
 
+$ cat /etc/netplan/50-cloud-init.yaml
+network:
+    ethernets:
+        eth0:
+            dhcp4: true
+            optional: true
+    version: 2
+    wifis:
+        wlan0:
+            optional: true
+            access-points:
+                "my-wifi-ssid":
+                    password: "my-wifi-password"
+            dhcp4: true
+            
 # apply the settings
 $ sudo netplan apply
+
+# install net-tools to see adapter ip addresses
+$ sudo apt install net-tools
 
 # check that wifi adapter has an ip address
 $ ip a
@@ -132,15 +150,15 @@ $ sudo rpi-eeprom-update -d -f ./pieeprom-new.bin
 BOOTFS /boot
 EEPROM update pending. Please reboot to apply the update.
 
-# check the version
+sudo reboot
+
+# login again and check the boot loader version
 $ vcgencmd bootloader_version
 Mar 18 2021 08:54:11
 version 1b43d5b6fe5b71c300563afc0548122752a0618b (release)
 timestamp 1616057651
 update-time 1618219141
 capabilities 0x0000001f
-
-sudo reboot
 ```
 
 After rebooting has completed attach the SSD drive to the USB 3 port, one of the
@@ -203,6 +221,13 @@ section of this README file to enable wifi to connect to my network. You'll be
 unable to ssh to your Pi over wifi without that. You may need to use your
 ethernet connection to access the Raspberry Pi initially until you have set that
 up.
+
+I followed the above process for my other Raspberry Pis. As a shortcut you can
+reuse the same SD card each time so you only need to run the below command,
+without needing to run the prior commands to download the latest EEPROM updates
+and applying the boot configuration change to it.
+
+`sudo rpi-eeprom-update -d -f ./pieeprom-new.bin`
 
 ### Troubleshooting
 
