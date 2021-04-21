@@ -102,7 +102,7 @@ as he explains each as well as the manual steps in the automated script.
 
 - Write the Raspberry Pi OS to the SD card using the Raspberry Pi Imager
   application
-- Write the Ubuntu Server 20.10.04 LTS to the SSD drive, the Raspberry Pi Imager
+- Write the Ubuntu Server 20.04.2 64bit LTS to the SSD drive, the Raspberry Pi Imager
   application will accept the SSD drive as an SD card.
 - Boot the Raspberry Pi from the SD card, don't attach the SSD drive yet
 
