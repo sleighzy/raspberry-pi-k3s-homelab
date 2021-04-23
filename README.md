@@ -5,7 +5,7 @@ Kubernetes cluster using Raspberry Pis. I have a short memory so this makes it
 easier to remember why/how I did things...and may help others who travel down
 this path.
 
-![k3s-cluster](./raspberry-pi-4b-cluster.jpg)
+![k3s-cluster]
 
 - [Raspberry Pi](#raspberry-pi)
   - [Ubuntu OS Installation](#ubuntu-os-installation)
@@ -38,9 +38,9 @@ I am running Ubuntu 20.04.2 LTS 64bit as the operating system.
 
 Additional hardware for each:
 
-- Kingstone A2000 1TB M.2 NVMe SSD
-- Orica transparent NVMe.m2 USB-C SSD enclosure
-- Yahboom RGB cooling hat with fan and lcd display
+- [Kingstone A2000] 1TB M.2 NVMe SSD
+- [Orica NVMe M.2] transparent USB-C SSD enclosure
+- [Yahboom RGB Cooling HAT] with fan and OLED display
 
 ## Ubuntu OS Installation
 
@@ -78,7 +78,7 @@ network:
                 "my-wifi-ssid":
                     password: "my-wifi-password"
             dhcp4: true
-            
+
 # apply the settings
 $ sudo netplan apply
 
@@ -113,15 +113,15 @@ were excellent and easily followed. I only had a couple of items:
   <https://ubuntu.com/tutorials/how-to-install-ubuntu-desktop-on-raspberry-pi-4#4-optional-usb-boot>
   for further information.
 
-### tl;dr
+### TL;DR
 
 Steps and commands I ran for future reference. Please read Jame's guide in full
 as he explains each as well as the manual steps in the automated script.
 
 - Write the Raspberry Pi OS to the SD card using the Raspberry Pi Imager
   application
-- Write the Ubuntu Server 20.04.2 64bit LTS to the SSD drive, the Raspberry Pi Imager
-  application will accept the SSD drive as an SD card.
+- Write the Ubuntu Server 20.04.2 64bit LTS to the SSD drive, the Raspberry Pi
+  Imager application will accept the SSD drive as an SD card.
 - Boot the Raspberry Pi from the SD card, don't attach the SSD drive yet
 
 Run the below commands to update the EEPROM and set bootloader config to boot
@@ -296,14 +296,17 @@ for installing the applications deployed in my cluster.
 [cluster monitoring readme file]: monitoring-and-logging/README.md
 [install ubuntu on a raspberry pi]: https://ubuntu.com/download/raspberry-pi
 [k3s]: https://k3s.io/
+[k3s-cluster]: ./assets/raspberry-pi-4b-cluster.jpg
 [k3s keycloak deployment]: https://github.com/sleighzy/k3s-keycloak-deployment
 [k3s readme file]: ./k3s.md
 [k3sup]: https://github.com/alexellis/k3sup
 [keycloak]: https://www.keycloak.org/
+[kingstone a2000]: https://www.kingston.com/en/ssd/a2000-nvme-pcie-ssd
 [minio]: https://min.io/
 [minio s3]: https://github.com/sleighzy/k3s-minio-deployment
 [openid connect traefik forward authentication]:
   https://github.com/sleighzy/k3s-traefik-forward-auth-openid-connect
+[orica nvme m.2]: https://www.orico.cc/usmobile/article/detail/id/255
 [raspberry pi]: https://www.raspberrypi.org/
 [raspberry pi 4 model b]:
   https://www.raspberrypi.org/products/raspberry-pi-4-model-b/specifications/
@@ -311,3 +314,5 @@ for installing the applications deployed in my cluster.
 [restic minio backups]: restic-minio-backups.md
 [traefik 2 kubernetes ingress controller crd]:
   https://github.com/sleighzy/k3s-traefik-v2-kubernetes-crd
+[yahboom rgb cooling hat]:
+  https://category.yahboom.net/collections/home-featured-products/products/rgb-cooling-hat
