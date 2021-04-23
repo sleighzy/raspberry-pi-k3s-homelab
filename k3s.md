@@ -3,6 +3,20 @@
 [k3s] is a lightweight, certified Kubernetes distribution, for production
 workloads from Rancher Labs.
 
+- [Installation](#installation)
+  - [Installing K3s server node with script](#installing-k3s-server-node-with-script)
+  - [Traefik v2 Kubernetes Ingress Controller](#traefik-v2-kubernetes-ingress-controller)
+  - [K3s systemd service](#k3s-systemd-service)
+  - [Installing K3s agent node with k3sup](#installing-k3s-agent-node-with-k3sup)
+- [Persistent Storage](#persistent-storage)
+  - [Longhorn Storage Provisioner](#longhorn-storage-provisioner)
+  - [Local Path Provisioner](#local-path-provisioner)
+  - [tmpfs](#tmpfs)
+- [Building Container Images](#building-container-images)
+  - [Building images with BuildKit for containerd](#building-images-with-buildkit-for-containerd)
+- [Updating Configuration in Secrets](#updating-configuration-in-secrets)
+- [Troubleshooting](#troubleshooting)
+
 ## Installation
 
 Before installing K3s on your Raspberry Pi you need to update the configuration
@@ -188,9 +202,21 @@ Output: [INFO]  Finding release for channel v1.19
 [INFO]  systemd: Starting k3s-agent
 ```
 
-## External Hard Drive for Persistent Storage
+## Persistent Storage
 
-K3s comes with Rancher’s [Local Path Provisioner] and this enables the ability
+### Longhorn Storage Provisioner
+
+I had previously used a single external HDD attached to the master node and the
+K3s [Local Path Provisioner] storage class. I have now moved to SSD drives and
+the [Longhorn] storage provisioner. See [rancher-longhorn-storage.md] for my
+documentation on installing and using in my cluster.
+
+_Note: I have left the below section on single node HDD storage even though I am
+no longer using this._
+
+### Local Path Provisioner
+
+K3s comes with Rancher's [Local Path Provisioner] and this enables the ability
 to create persistent volume claims out of the box
 
 To provide a much larger disk for persistent storage I connected and mounted an
@@ -309,7 +335,7 @@ the `disktype=hdd` label they will be written to the external hard drive.
 Refer to the K3s [storage provisioner configuration documentation] for more
 information on this.
 
-## Mount tmpfs
+### tmpfs
 
 The below mounts an emptyDir (ephemeral storage) using tmpfs so is stored in
 memory and not even written to disk. This can help prolong the SD card life as
@@ -465,6 +491,8 @@ Oct 13 07:39:53 k3s-1 systemd[1]: Stopped Lightweight Kubernetes.
 [kubernetes traefik ingress controller crd]:
   https://github.com/sleighzy/k3s-traefik-v2-kubernetes-crd
 [local path provisioner]: https://rancher.com/docs/k3s/latest/en/storage/
+[longhorn]: https://longhorn.io/
+[rancher-longhorn-storage.md]: ./rancher-longhorn-storage.md
 [storage provisioner configuration documentation]:
   https://github.com/rancher/local-path-provisioner/blob/master/README.md#Configuration
 [traefik]: https://traefik.io/traefik/
