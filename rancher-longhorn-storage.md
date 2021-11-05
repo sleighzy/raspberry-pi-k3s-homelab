@@ -165,6 +165,53 @@ occurs regularly.
 
 ![longhorn-rebuilding-volume]
 
+## Troubleshooting
+
+### Orphaned pods unable to be removed
+
+If the Kubernetes cluster is not shutdown cleanly, e.g. the power is turned off
+on the node without shutting down K3s first, then the pods may become orphaned
+when the cluster is restarted. Kubernetes should be able to clean these up, but
+there can be cases due to volume issues that it cannot. When this happens, the
+logs will be spammed with the below error message when starting up the `k3s` or
+`k3s-agent` services.
+
+```plain
+$ sudo journalctl -f -u k3s
+
+kubelet_volumes.go:225] "There were many similar errors. Turn up verbosity to see them." err="orphaned pod \"97c98a18-b7d0-4dd3-bd9e-d98933c987cf\" found, but error not a directory occurred when trying to remove the volumes dir" numErrs=2
+```
+
+To resolve this issue you need to remove the files within this volume from the
+disk on the node. In my experience so far these have only contained the
+`vol_data.json` file.
+
+```plain
+# Find the directory that contains the volume using the pod id on the same node as the error log
+$ sudo ls -l /var/lib/kubelet/pods/97c98a18-b7d0-4dd3-bd9e-d98933c987cf/volumes/kubernetes.io~csi/
+drwxr-x--- 2 root root 4096 Nov  3 06:56 pvc-eb653e02-8963-4739-86e5-c11a4db5675d
+
+# Check the contents of the directory for the file Kubernetes is unable to remove
+$ sudo ls -l /var/lib/kubelet/pods/97c98a18-b7d0-4dd3-bd9e-d98933c987cf/volumes/kubernetes.io~csi/pvc-eb653e02-8963-4739-86e5-c11a4db5675d
+-rw-r--r-- 1 root root 289 Nov  3 06:56 vol_data.json
+
+# Remove this file from the disk
+$ sudo rm /var/lib/kubelet/pods/97c98a18-b7d0-4dd3-bd9e-d98933c987cf/volumes/kubernetes.io~csi/
+pvc-eb653e02-8963-4739-86e5-c11a4db5675d/vol_data.json
+```
+
+When you check the logs again you will see the volume has been removed. The logs
+may show that another pod has failed for a similar reason so you will need to
+clean that up as well.
+
+```plain
+$ sudo journalctl -f -u k3s
+kubelet_volumes.go:140] "Cleaned up orphaned pod volumes dir" podUID=97c98a18-b7d0-4dd3-bd9e-d98933c987cf path="/var/lib/kubelet/pods/97c98a18-b7d0-4dd3-bd9e-d98933c987cf/volumes"
+```
+
+Check the other server and agent nodes for the same issue and repeat this
+process if needed.
+
 [install/upgrade rancher on a kubernetes cluster]:
   https://rancher.com/docs/rancher/v2.5/en/installation/install-rancher-on-k8s/
 [longhorn-attached-volume]: ./assets/longhorn-attached-volume.png
