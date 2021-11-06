@@ -289,11 +289,13 @@ for installing the applications deployed in my cluster.
 | [K3s Keycloak Deployment]                       | Deployment of [Keycloak] for authentication and authorization to applications and services.                                                                                                                                                                      |
 | [OpenID Connect Traefik Forward Authentication] | Manifest files and instructions for deploying a Traefik Forward Authentication component to delegate authentication to OpenID Connect Providers such as Github or Google.                                                                                        |
 | [MinIO S3]                                      | Files for deploying the Open Source [MinIO] server for S3 object storage. Contains additional documentation and policy files for integrating with Keycloak using OAuth2 / OpenID Connect to authenticate and authorize access to resources.                      |
+| [Docker Registry] | Manifest files and instructions for deploying a private Docker Registry and web user interface |
 | [Restic MinIO Backups]                          | Using [Restic] to backup data to [MinIO] S3 storage                                                                                                                                                                                                              |
 
 <!-- markdownlint-enable MD013 -->
 
 [cluster monitoring readme file]: monitoring-and-logging/README.md
+[docker registry]: https://github.com/sleighzy/k8s-docker-registry
 [install ubuntu on a raspberry pi]: https://ubuntu.com/download/raspberry-pi
 [k3s]: https://k3s.io/
 [k3s-cluster]: ./assets/raspberry-pi-4b-cluster.jpg
