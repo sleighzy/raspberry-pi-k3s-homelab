@@ -20,9 +20,78 @@ cheating after using `kubectl` for everything.
 ## Installing Longhorn
 
 Rancher provides the means to install applications, this is performed internally
-using Helm. I installed Rancher Longhorn from within the _Apps & Marketplace_
-page in the dashboard. Once installed I then added my Raspberry Pi worker nodes
-as Longhorn nodes and set the number of replicas to 2.
+using Helm. I have installed Rancher Longhorn from within the _Apps &
+Marketplace_ page in the Rancher dashboard. I have installed using the Helm
+chart directly in the past as well.
+
+### Only running on agent nodes
+
+If you only want replicas running on your agent nodes (data planes) and not your
+server nodes (control planes) then set the number of replicas to the same
+number, or less, as your agent nodes in your cluster. This is the
+`persistence.defaultClassReplicaCount` value for the Helm chart. Setting the
+number of replicas to `2` for example in the Longhorn admin screen settings
+after installing Longhorn will only take effect for volumes created through the
+user interface. For volumes created via `kubectl` this will use the number of
+replicas for the `longhorn` storage class, this will have been initially set by
+the Helm chart and cannot be modified unless installing/upgrading with the Helm
+chart and setting the `persistence.defaultClassReplicaCount` value. See below
+for the `numberOfReplicas` parameter for the storage class after it has been
+created.
+
+```plain
+$ kubectl describe storageclass longhorn
+
+Name:            longhorn
+IsDefaultClass:  Yes
+Annotations:     longhorn.io/last-applied-configmap=kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: longhorn
+  annotations:
+    storageclass.kubernetes.io/is-default-class: "true"
+provisioner: driver.longhorn.io
+allowVolumeExpansion: true
+reclaimPolicy: "Delete"
+volumeBindingMode: Immediate
+parameters:
+  numberOfReplicas: "2"
+  staleReplicaTimeout: "30"
+  fromBackup: ""
+  fsType: "ext4"
+,storageclass.kubernetes.io/is-default-class=true
+Provisioner:           driver.longhorn.io
+Parameters:            fromBackup=,fsType=ext4,numberOfReplicas=2,staleReplicaTimeout=30
+AllowVolumeExpansion:  True
+MountOptions:          <none>
+ReclaimPolicy:         Delete
+VolumeBindingMode:     Immediate
+Events:                <none>
+```
+
+You will also need to set the server node to **Disabled** in the Longhorn
+dashboard so that volumes are not scheduled and created on it. Doing this will
+ensure that you are not adding extra workload to the server nodes as they will
+not be running a Longhorn container per volume and heavy I/O to persist data.
+See the Longhorn documentation [Evicting Replicas on Disabled Disks or Nodes]
+for further information.
+
+![longhorn-disable-node]
+
+**Note:** Don't worry if you have already installed Longhorn and didn't set the
+default number of replicas for the storage class. I was able to achieve the
+above using `helm upgrade` and the
+`--set persistence.defaultClassReplicaCount=2` argument as initially when I
+first installed Longhorn I hadn't set the default number of replicas to 2 (I
+have a 3 node cluster). The existing volumes still had all the replicas running,
+including the `k3s-1` server node, even after disabling scheduling on the
+`k3s-1` server node. Using the Longhorn dashboard I updated the number of
+replicas to 2 for each individual volume and this automatically removed the
+`k3s-1` node.
+
+**TODO:** Try scaling the replicas up to 3 or higher for a test volume and see
+if these are spread across the nodes, e.g. 2 replicas placed on `k3s-2` and 1
+replica placed on `k3s-3`.
 
 ### Update Default Storage Class
 
@@ -212,10 +281,13 @@ kubelet_volumes.go:140] "Cleaned up orphaned pod volumes dir" podUID=97c98a18-b7
 Check the other server and agent nodes for the same issue and repeat this
 process if needed.
 
+[evicting replicas on disabled disks or nodes]:
+  https://longhorn.io/docs/1.2.3/volumes-and-nodes/disks-or-nodes-eviction/
 [install/upgrade rancher on a kubernetes cluster]:
   https://rancher.com/docs/rancher/v2.5/en/installation/install-rancher-on-k8s/
 [longhorn-attached-volume]: ./assets/longhorn-attached-volume.png
 [longhorn-dashboard]: ./assets/longhorn-dashboard.png
+[longhorn-disable-node]: ./assets/longhorn-disable-node.png
 [longhorn-nodes]: ./assets/longhorn-nodes.png
 [longhorn-rebuilding-volume]: ./assets/longhorn-rebuilding-volume.png
 [longhorn]: https://longhorn.io/
